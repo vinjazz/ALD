@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <title>Acquario Layout Designer - AcquariofiliaFacile</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-green: #2ECC71;
+            --dark-green: #27AE60;
+            --light-green: #A8E6CF;
+            --aqua-green: #26D0CE;
+            --bg-green: #E8F8F5;
+            --text-dark: #2C3E50;
+            --shadow-color: rgba(46, 204, 113, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #E8F8F5 0%, #D5F4E6 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2ECC71 0%, #26D0CE 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            animation: fadeOut 0.5s ease-out 2s forwards;
+        }
+
+        .logo-animation {
+            animation: bounceIn 1s ease-out, pulse 1s ease-in-out infinite 1s;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(-100px);
+            }
+            50% {
+                opacity: 0.9;
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Animated Elements */
+        .animated-element {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.6;
+            animation: swim 20s linear infinite;
+            z-index: 1; /* Behind content */
+        }
+
+        @keyframes swim {
+            0% {
+                transform: translateX(-100px) rotate(0deg);
+            }
+            25% {
+                transform: translateX(25vw) rotate(90deg);
+            }
+            50% {
+                transform: translateX(50vw) rotate(180deg);
+            }
+            75% {
+                transform: translateX(75vw) rotate(270deg);
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) rotate(360deg);
+            }
+        }
+
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            33% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            66% {
+                transform: translateY(10px) translateX(-10px);
+            }
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            min-height: 80px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 180px); /* Reduced from 220px */
+            padding: 0.5rem; /* Reduced from 1rem */
+            gap: 0.5rem; /* Reduced from 1rem */
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: white;
+            padding: 0.5rem 2rem;
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            border-top: 1px solid #E0E0E0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .status-bar > div {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Tools Sidebar - Reduced width */
+        .tools-sidebar {
+            background: white;
+            border-radius: 8px; /* Reduced from 15px */
+            padding: 0.5rem; /* Reduced from 0.75rem */
+            box-shadow: 0 2px 8px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem; /* Reduced from 0.25rem */
+            width: 180px; /* Reduced from 200px */
+            animation: slideInLeft 0.8s ease-out 0.3s both;
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+        }
+
+        .tool-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 1rem;
+            border: none;
+            background: transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            width: 100%;
+            text-align: left;
+            position: relative;
+        }
+
+        .tooltip {
+            position: absolute;
+            left: 100%;
+            margin-left: 10px;
+            background-color: var(--text-dark);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            z-index: 100;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .tool-btn:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .tool-btn:hover {
+            background: var(--bg-green);
+            transform: translateX(5px);
+        }
+
+        .tool-btn.active {
+            background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);
+            color: white;
+        }
+
+        .tool-btn i {
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .separator {
+            height: 1px;
+            background: #E0E0E0;
+            margin: 0.25rem 0;
+        }
+
+        /* Canvas Area - Optimized for maximum space usage */
+        .canvas-area {
+            flex: 1;
+            background: white;
+            border-radius: 8px; /* Reduced from 15px */
+            box-shadow: 0 2px 8px var(--shadow-color); /* Reduced shadow */
+            overflow: hidden;
+            position: relative;
+            animation: fadeIn 0.8s ease-out 0.5s both;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #canvas-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px; /* Consistent padding */
+            box-sizing: border-box;
+            overflow: hidden; /* Prevent scrollbars */
+        }
+
+        /* Canvas should take full available space */
+        #canvas {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        /* Layers Sidebar - Reduced width */
+        .layers-sidebar {
+            background: white;
+            border-radius: 8px; /* Reduced from 15px */
+            padding: 0.75rem; /* Reduced from 1rem */
+            box-shadow: 0 2px 8px var(--shadow-color);
+            width: 220px; /* Reduced from 250px */
+            display: flex;
+            flex-direction: column;
+            animation: slideInRight 0.8s ease-out 0.3s both;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #E0E0E0;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-header span {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Eraser Tooltip */
+        .eraser-tooltip {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--text-dark);
+            color: white;
+            padding: 0.8rem;
+            border-radius: 8px;
+            max-width: 280px;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .eraser-tooltip.active {
+            display: block;
+        }
+        .pencil-options, .eraser-options {
+            position: absolute;
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            z-index: 100;
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        /* Dialogs */
+        .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .dialog-overlay.active {
+            display: flex;
+        }
+
+        .dialog {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            min-width: 400px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: zoomIn 0.3s ease-out;
+        }
+
+        .filter-preview-container {
+            width: 100%;
+            height: 200px;
+            background-color: #f1f3f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+        }
+
+        /* Success/Warning/Error colors */
+        :root {
+            --success-color: #0ca678;
+            --warning-color: #f59f00;
+            --danger-color: #e03131;
+            --border-color: #ced4da;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #27AE60 0%, #2ECC71 100%);
+            color: white;
+            padding: 1rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer img {
+            height: 30px;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer p {
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .loading-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--light-green);
+            border-top-color: var(--primary-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+        }
+
+        .toast {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            animation: slideInRight 0.3s ease-out;
+            min-width: 300px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .toast-success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .toast-warning {
+            border-left: 4px solid #f59f00;
+        }
+
+        .toast-error {
+            border-left: 4px solid #e03131;
+        }
+
+        .toast-info {
+            border-left: 4px solid var(--aqua-green);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.5;
+            margin-left: 1rem;
+        }
+
+        .toast-close:hover {
+            opacity: 1;
+        }
+
+        /* Add color-picker specific styles */
+        .form-control-color {
+            width: 50px;
+            height: 38px;
+            padding: 0.375rem;
+        }
+
+        /* Bottom actions specific styles */
+        .bottom-actions {
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Plant Gallery Tabs - New Compact Design */
+        .plant-tabs-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            justify-content: center;
+        }
+
+        .plant-tab {
+            flex: 1;
+            min-width: 70px;
+            max-width: 90px;
+            padding: 0.4rem 0.2rem;
+            border: 2px solid var(--border-color);
+            background: white;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-dark);
+        }
+
+        .plant-tab:hover {
+            border-color: var(--primary-green);
+            background: var(--bg-green);
+            transform: translateY(-1px);
+        }
+
+        .plant-tab.active {
+            background: linear-gradient(135deg, #2ECC71 0%, #27AE60 100%);
+            border-color: var(--primary-green);
+            color: white;
+            box-shadow: 0 2px 4px rgba(46, 204, 113, 0.3);
+        }
+
+        /* Plant Gallery Styles */
+        .plant-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .plant-item {
+            background-color: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .plant-item:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .plant-item.selected {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.3);
+        }
+
+        .plant-thumbnail {
+            width: 100%;
+            height: 100px;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .plant-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .plant-info {
+            padding: 0.5rem;
+            background-color: white;
+        }
+
+        .plant-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0.2rem;
+        }
+
+        .plant-latin {
+            font-size: 0.75rem;
+            color: #6c757d;
+            font-style: italic;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .plant-link-icon {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: var(--primary-green);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .plant-item:hover .plant-link-icon {
+            opacity: 1;
+        }
+
+        /* Layers Styles */
+        .layer-item {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .layer-item:hover {
+            background-color: var(--bg-green);
+        }
+
+        .layer-item.active {
+            background-color: #e6fcf5;
+            border-color: var(--accent-color);
+        }
+
+        .layer-thumbnail {
+            width: 40px;
+            height: 40px;
+            background-color: #eee;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .layer-thumbnail img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .layer-info {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .layer-name {
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .layer-type {
+            font-size: 0.7rem;
+            color: #6c757d;
+        }
+
+        .layer-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        .layer-btn {
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: none;
+            color: #495057;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 0.2rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .layer-btn:hover {
+            background-color: #e9ecef;
+        }
+
+        .layer-btn.visible .fa-eye {
+            color: var(--primary-green);
+        }
+
+        .layer-btn.visible .fa-eye-slash {
+            display: none;
+        }
+
+        .layer-btn:not(.visible) .fa-eye {
+            display: none;
+        }
+
+        .layer-btn:not(.visible) .fa-eye-slash {
+            color: #adb5bd;
+        }
+
+        /* Utility classes */
+        .disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .plant-gallery-empty {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+
+        .plant-details-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        /* Form controls */
+        .form-range {
+            accent-color: var(--primary-green);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-green);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--dark-green);
+        }
+
+        /* Plant Gallery Responsive Design */
+        @media (max-width: 600px) {
+            .plant-tabs-container {
+                justify-content: stretch;
+            }
+            
+            .plant-tab {
+                min-width: 60px;
+                max-width: none;
+                font-size: 0.7rem;
+                padding: 0.3rem 0.1rem;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .main-container {
+                flex-wrap: wrap;
+                padding: 0.25rem;
+                gap: 0.25rem;
+            }
+            
+            .tools-sidebar {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                order: 2;
+                max-height: 80px;
+            }
+            
+            .canvas-area {
+                width: 100%;
+                order: 1;
+                height: 400px;
+            }
+            
+            .layers-sidebar {
+                width: 100%;
+                order: 3;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 0.75rem;
+            }
+            
+            .logo {
+                font-size: 1.2rem;
+            }
+            
+            .tool-btn span {
+                display: none;
+            }
+            
+            .tools-sidebar {
+                width: auto;
+                padding: 0.25rem;
+            }
+            
+            .tool-btn {
+                padding: 0.5rem;
+                justify-content: center;
+            }
+            
+            .main-container {
+                height: calc(100vh - 140px);
+            }
+        }
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="logo-animation">
+            <img src="https://www.acquariofiliafacile.it/favicon.ico" alt="Logo" style="width: 100px;">
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <!-- Animated Elements -->
+        <span class="animated-element" style="top: 10px; left: 5%; animation-delay: 0s;">🐟</span>
+        <span class="animated-element" style="top: 40px; left: 15%; animation-delay: 2s;">🐠</span>
+        <span class="animated-element" style="top: 25px; left: 80%; animation-delay: 4s;">🌿</span>
+        <span class="animated-element" style="top: 50px; left: 90%; animation-delay: 6s;">🪨</span>
+        <span class="animated-element" style="top: 15px; left: 35%; animation-delay: 8s;">🐡</span>
+        <span class="animated-element" style="top: 35px; left: 65%; animation-delay: 10s;">🌱</span>
+        
+        <!-- Bubbles -->
+        <div class="bubble" style="width: 10px; height: 10px; bottom: 10px; left: 10%; animation-delay: 0s;"></div>
+        <div class="bubble" style="width: 15px; height: 15px; bottom: 20px; left: 30%; animation-delay: 2s;"></div>
+        <div class="bubble" style="width: 8px; height: 8px; bottom: 15px; left: 50%; animation-delay: 4s;"></div>
+        <div class="bubble" style="width: 12px; height: 12px; bottom: 25px; left: 70%; animation-delay: 1s;"></div>
+        <div class="bubble" style="width: 10px; height: 10px; bottom: 10px; left: 90%; animation-delay: 3s;"></div>
+        
+        <div class="header-content">
+            <div class="logo">
+                <img src="https://www.acquariofiliafacile.it/favicon.ico" alt="Acquariofilia.org">
+                <span>Acquario Layout Designer</span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Tools Sidebar -->
+        <div class="tools-sidebar">
+            <button class="tool-btn active" id="select-tool">
+                <i class="fas fa-mouse-pointer"></i>
+                <span>Seleziona</span>
+                <span class="tooltip">Seleziona</span>
+            </button>
+            <button class="tool-btn" id="eraser-tool">
+                <i class="fas fa-eraser"></i>
+                <span>Gomma</span>
+                <span class="tooltip">Gomma</span>
+            </button>
+            <button class="tool-btn" id="remove-bg-tool">
+                <i class="fas fa-eye-dropper"></i>
+                <span>Rimuovi sfondo</span>
+                <span class="tooltip">Rimuovi sfondo</span>
+            </button>
+            
+            <div class="separator"></div>
+            
+            <button class="tool-btn" id="pencil-tool">
+                <i class="fas fa-pencil-alt"></i>
+                <span>Matita</span>
+                <span class="tooltip">Matita</span>
+            </button>
+            <button class="tool-btn" id="set-background-btn">
+                <i class="fas fa-fill-drip"></i>
+                <span>Imposta Sfondo</span>
+                <span class="tooltip">Imposta Sfondo</span>
+            </button>
+            <button class="tool-btn" id="add-image-btn">
+                <i class="fas fa-image"></i>
+                <span>Aggiungi immagine</span>
+                <span class="tooltip">Aggiungi immagine</span>
+            </button>
+            <button class="tool-btn" id="add-plant-btn">
+                <i class="fas fa-leaf"></i>
+                <span>Galleria piante</span>
+                <span class="tooltip">Galleria piante</span>
+            </button>
+            <button class="tool-btn" id="group-btn">
+                <i class="fas fa-object-group"></i>
+                <span>Raggruppa</span>
+                <span class="tooltip">Raggruppa</span>
+            </button>
+            <button class="tool-btn" id="ungroup-btn">
+                <i class="fas fa-object-ungroup"></i>
+                <span>Separa</span>
+                <span class="tooltip">Separa</span>
+            </button>
+            
+            <div class="separator"></div>
+            
+            <button class="tool-btn" id="undo-btn">
+                <i class="fas fa-undo"></i>
+                <span>Annulla</span>
+                <span class="tooltip">Annulla</span>
+            </button>
+            <button class="tool-btn" id="redo-btn">
+                <i class="fas fa-redo"></i>
+                <span>Ripristina</span>
+                <span class="tooltip">Ripristina</span>
+            </button>
+            
+            <div class="separator"></div>
+            
+            <button class="tool-btn" id="export-btn">
+                <i class="fas fa-download"></i>
+                <span>Esporta</span>
+                <span class="tooltip">Esporta</span>
+            </button>
+        </div>
+
+        <!-- Canvas Area -->
+        <div class="canvas-area">
+            <div id="canvas-wrapper">
+                <canvas id="canvas"></canvas>
+            </div>
+            
+            <!-- Pencil Options -->
+            <div class="pencil-options" id="pencil-options">
+                <div class="mb-3">
+                    <label class="form-label">Spessore:</label>
+                    <input type="range" class="form-range" id="pencil-size-slider" min="1" max="20" value="3">
+                </div>
+                <div>
+                    <label class="form-label">Colore:</label>
+                    <input type="color" class="form-control form-control-color" id="pencil-color-picker" value="#000000">
+                </div>
+            </div>
+
+            <!-- Eraser Options -->
+            <div class="eraser-options" id="eraser-options">
+                <div class="mb-3">
+                    <label class="form-label">Dimensione:</label>
+                    <input type="range" class="form-range" id="eraser-size-slider" min="5" max="50" value="20">
+                </div>
+                <div class="alert alert-info" style="margin: 0;">
+                    <strong>Come usare la gomma:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li>Seleziona prima un'immagine</li>
+                        <li>Clicca solo all'interno dell'immagine</li>
+                        <li>Regola la dimensione con il cursore</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Eraser Tooltip -->
+            <div class="eraser-tooltip" id="eraser-tooltip">
+                <strong>Come usare la gomma:</strong>
+                <ul style="margin: 5px 0 0 15px; padding: 0;">
+                    <li>Seleziona prima un'immagine</li>
+                    <li>Clicca solo all'interno dell'immagine per cancellare</li>
+                    <li>Regola la dimensione della gomma con il cursore</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Layers Sidebar -->
+        <div class="layers-sidebar">
+            <div class="sidebar-header">
+                <span>Livelli</span>
+                <button class="btn btn-sm btn-primary" id="add-layer-btn">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div class="sidebar-content flex-grow-1" id="layers-container">
+                <!-- Layers will be added here dynamically -->
+            </div>
+            <div class="bottom-actions mt-3">
+                <button class="btn btn-outline w-100 mb-2" id="delete-layer-btn">
+                    <i class="fas fa-trash"></i> Elimina
+                </button>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline flex-fill" id="move-up-btn">
+                        <i class="fas fa-arrow-up"></i> Su
+                    </button>
+                    <button class="btn btn-outline flex-fill" id="move-down-btn">
+                        <i class="fas fa-arrow-down"></i> Giù
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dialogs (same structure but with Bootstrap classes) -->
+    <!-- Add Image Dialog -->
+    <div class="dialog-overlay" id="add-image-dialog">
+        <div class="dialog">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Aggiungi Immagine</h5>
+                <button class="btn-close" id="add-image-close"></button>
+            </div>
+            <div class="dialog-body">
+                <div class="mb-3">
+                    <label class="form-label">Seleziona immagine</label>
+                    <input type="file" class="form-control" id="image-upload" accept=".jpg,.jpeg,.png,.gif">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Nome livello</label>
+                    <input type="text" class="form-control" id="layer-name" placeholder="Inserisci un nome">
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-outline" id="add-image-cancel">Annulla</button>
+                <button class="btn btn-primary" id="add-image-confirm">Aggiungi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Background Dialog -->
+    <div class="dialog-overlay" id="remove-bg-dialog">
+        <div class="dialog">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Rimuovi Sfondo</h5>
+                <button class="btn-close" id="remove-bg-close"></button>
+            </div>
+            <div class="dialog-body">
+                <div class="filter-preview mb-3">
+                    <div class="filter-preview-container" id="filter-preview-container">
+                        <!-- Preview image will be placed here -->
+                    </div>
+                </div>
+                <div class="threshold-controls">
+                    <div class="mb-3">
+                        <label class="form-label">Modalità:</label>
+                        <select class="form-select" id="bg-removal-mode">
+                            <option value="light">Rimuovi sfondo chiaro</option>
+                            <option value="dark">Rimuovi sfondo scuro</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Soglia: <span id="threshold-value">200</span></label>
+                        <input type="range" class="form-range" id="threshold-slider" min="0" max="255" value="200">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tolleranza: <span id="tolerance-value">10</span></label>
+                        <input type="range" class="form-range" id="tolerance-slider" min="0" max="50" value="10">
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-outline" id="remove-bg-cancel">Annulla</button>
+                <button class="btn btn-primary" id="remove-bg-confirm">Applica</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Dialog -->
+    <div class="dialog-overlay" id="background-dialog">
+        <div class="dialog">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Imposta Sfondo</h5>
+                <button class="btn-close" id="background-close"></button>
+            </div>
+            <div class="dialog-body">
+                <div class="mb-3">
+                    <label class="form-label">Tipo di sfondo</label>
+                    <select class="form-select" id="background-type">
+                        <option value="color">Colore</option>
+                        <option value="image">Immagine</option>
+                    </select>
+                </div>
+
+                <div class="mb-3" id="background-color-group">
+                    <label class="form-label">Colore sfondo</label>
+                    <div class="d-flex gap-2">
+                        <input type="color" class="form-control form-control-color" id="background-color" value="#ffffff">
+                        <input type="text" class="form-control" id="background-color-hex" value="#ffffff" placeholder="#RRGGBB">
+                    </div>
+                </div>
+
+                <div class="mb-3" id="background-image-group" style="display: none;">
+                    <label class="form-label">Seleziona immagine di sfondo</label>
+                    <input type="file" class="form-control" id="background-upload" accept=".jpg,.jpeg,.png,.gif">
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-outline" id="background-cancel">Annulla</button>
+                <button class="btn btn-primary" id="background-confirm">Applica</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Dialog -->
+    <div class="dialog-overlay" id="export-dialog">
+        <div class="dialog">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Esporta Layout</h5>
+                <button class="btn-close" id="export-close"></button>
+            </div>
+            <div class="dialog-body">
+                <div class="mb-3">
+                    <label class="form-label">Nome file</label>
+                    <input type="text" class="form-control" id="export-filename" value="acquario-layout.png">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Formato</label>
+                    <select class="form-select" id="export-format">
+                        <option value="png">PNG</option>
+                        <option value="jpeg">JPEG</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Qualità (solo JPEG): <span id="quality-value">80%</span></label>
+                    <input type="range" class="form-range" id="export-quality" min="0.1" max="1.0" step="0.1" value="0.8">
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-outline" id="export-cancel">Annulla</button>
+                <button class="btn btn-primary" id="export-confirm">Esporta</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plant Gallery Dialog -->
+    <div class="dialog-overlay" id="plant-gallery-dialog">
+        <div class="dialog" style="width: 600px; max-width: 90%;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Galleria Piante</h5>
+                <button class="btn-close" id="plant-gallery-close"></button>
+            </div>
+            <div class="dialog-body">
+                <div class="mb-3">
+                    <input type="text" class="form-control" id="plant-search" placeholder="Cerca piante...">
+                </div>
+                
+                <div class="plant-tabs-container mb-3">
+                    <button class="plant-tab active" data-category="all">Tutte</button>
+                    <button class="plant-tab" data-category="primo-piano">1° Piano</button>
+                    <button class="plant-tab" data-category="medio">Medio</button>
+                    <button class="plant-tab" data-category="fondo">Fondo</button>
+                    <button class="plant-tab" data-category="epifite">Epifite</button>
+                    <button class="plant-tab" data-category="legni">Legni</button>
+                    <button class="plant-tab" data-category="rocce">Rocce</button>
+                </div>
+                
+                <div class="plant-gallery-grid" id="plant-gallery-grid">
+                    <!-- Plants will be loaded here dynamically -->
+                </div>
+                
+                <div class="plant-details-footer mt-3">
+                    <div id="selected-plant-info" style="display: none;">
+                        <a href="#" target="_blank" class="text-decoration-none" id="plant-details-link">
+                            <i class="fas fa-external-link-alt"></i>
+                            Vedi scheda completa
+                        </a>
+                    </div>
+                    <div class="text-end">
+                        <span id="selected-plant-name" class="fw-bold"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-outline" id="plant-gallery-cancel">Annulla</button>
+                <button class="btn btn-primary" id="plant-gallery-confirm" disabled>Aggiungi pianta</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container">
+        <!-- Toasts will be added here dynamically -->
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div id="position-info">Posizione: 0, 0 px</div>
+        <div id="zoom-info">Zoom: 100%</div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <!-- Animated Elements -->
+        <span class="animated-element" style="bottom: 10px; left: 5%; animation-delay: 1s; animation-duration: 15s;">🐟</span>
+        <span class="animated-element" style="bottom: 40px; left: 15%; animation-delay: 3s; animation-duration: 18s;">🐠</span>
+        <span class="animated-element" style="bottom: 25px; left: 25%; animation-delay: 5s; animation-duration: 22s;">🌿</span>
+        <span class="animated-element" style="bottom: 50px; left: 60%; animation-delay: 7s; animation-duration: 20s;">🪨</span>
+        <span class="animated-element" style="bottom: 15px; left: 75%; animation-delay: 9s; animation-duration: 16s;">🐡</span>
+        <span class="animated-element" style="bottom: 35px; left: 85%; animation-delay: 11s; animation-duration: 19s;">🌱</span>
+        
+        <img src="https://dxv1u8kbnp9qk.cloudfront.net/wp-content/uploads/2018/12/logo-af-orizzontale-piccolo.png" alt="Acquariofilia.org">
+        <p class="mb-0"><a target="_blank" href="https://www.acquariofiliafacile.it/">Powered by Acquariofiliafacile.it</a></p>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript to handle loading screen -->
+    <script>
+        // Remove loading screen after animations
+        setTimeout(() => {
+            document.querySelector('.loading-screen').style.display = 'none';
+        }, 2500);
+        
+        // Add active class toggle for tools
+        document.querySelectorAll('.tool-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.id !== 'undo-btn' && this.id !== 'redo-btn' && this.id !== 'export-btn' && 
+                    this.id !== 'add-layer-btn' && this.id !== 'group-btn' && this.id !== 'ungroup-btn' &&
+                    this.id !== 'move-up-btn' && this.id !== 'move-down-btn' && this.id !== 'delete-layer-btn' &&
+                    this.id !== 'add-image-btn' && this.id !== 'add-plant-btn' && this.id !== 'set-background-btn') {
+                    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+        
+        // Update slider values
+        document.getElementById('threshold-slider').addEventListener('input', function() {
+            document.getElementById('threshold-value').textContent = this.value;
+        });
+        
+        document.getElementById('tolerance-slider').addEventListener('input', function() {
+            document.getElementById('tolerance-value').textContent = this.value;
+        });
+        
+        document.getElementById('export-quality').addEventListener('input', function() {
+            document.getElementById('quality-value').textContent = Math.round(this.value * 100) + '%';
+        });
+    </script>
+    
+    <!-- Include original script.js -->
+    <script src="script.js"></script>
+</body>
+</html>
